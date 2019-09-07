@@ -23,23 +23,22 @@ class App extends React.Component<{}, State> {
         document.body.className = this.state.darkTheme ? "bp3-dark" : "bp3-body";
         return (
             <div className={this.themeClass()}>
-                <Navbar toggleFunc={this.toggleTheme}/>
+                <Navbar toggleFunc={() => { this.toggleTheme(); }}/>
                 <Form />
             </div>
         );
     }
 
-    private toggleTheme(): () => void {
-        return () => {
-            if (this.state.darkTheme) {
-                localStorage.setItem("darkTheme", "false");
-            } else {
-                localStorage.setItem("darkTheme", "true");
-            }
-            this.setState((prevState: State) => {
-                return { darkTheme: !prevState.darkTheme };
-            });
-        };
+    // TODO: lambda
+    private toggleTheme() {
+        if (this.state.darkTheme) {
+            localStorage.setItem("darkTheme", "false");
+        } else {
+            localStorage.setItem("darkTheme", "true");
+        }
+        this.setState((prevState: State) => {
+            return { darkTheme: !prevState.darkTheme };
+        });
     }
 
     private themeClass(): string {
