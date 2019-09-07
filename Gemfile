@@ -17,3 +17,4 @@ group :development do
 end
 
 gem 'simpacker'
+gem 'haml-rails'
