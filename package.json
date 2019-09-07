@@ -2,14 +2,19 @@
   "name": "rst_lyrics",
   "private": true,
   "dependencies": {
-    "@rails/ujs": "^6.0.0-alpha"
+    "@rails/ujs": "^6.0.0-alpha",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
   },
   "version": "0.1.0",
   "devDependencies": {
     "@types/node": "^12.7.4",
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
     "ts-loader": "^6.0.4",
     "tslint": "^5.19.0",
     "tslint-loader": "^3.5.4",
+    "tslint-react": "^4.0.0",
     "typescript": "^3.6.2",
     "webpack": "^4.39.3",
     "webpack-assets-manifest": "^3.1.1",
