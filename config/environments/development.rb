@@ -15,7 +15,7 @@ Rails.application.configure do
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
-  config.cache_store = :file_store, "#{Rails.root}/tmp/cache"
+  config.cache_store = :file_store, "#{Rails.root}/tmp/cache/search"
   config.action_controller.perform_caching = true
 
   # Raises error for missing translations.
