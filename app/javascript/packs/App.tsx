@@ -23,7 +23,7 @@ class App extends React.Component<{}, State> {
         document.body.className = this.state.darkTheme ? "bp3-dark" : "bp3-body";
         return (
             <div className={this.themeClass()}>
-                <Navbar toggleFunc={() => { this.toggleTheme(); }}/>
+                <Navbar darkTheme={this.state.darkTheme} toggleFunc={() => { this.toggleTheme(); }}/>
                 <Form />
             </div>
         );

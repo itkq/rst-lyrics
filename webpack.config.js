@@ -1,16 +1,20 @@
 const path = require("path");
+const glob = require("glob");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const { NODE_ENV } = process.env;
 const isProd = NODE_ENV === "production";
 
+const entry = {};
+for (const p of glob.sync(path.resolve(__dirname, 'app/javascript/packs/*.{ts,tsx}'))) {
+  entry[path.basename(p, path.extname(p))] = p;
+}
+
 module.exports = {
   mode: isProd ? "production" : "development",
   devtool: "source-map",
-  entry: {
-    application: path.resolve(__dirname, "app/javascript/packs/application.tsx")
-  },
+  entry: entry,
   output: {
     path: path.resolve(__dirname, "public/packs"),
     publicPath: isProd ? "/packs/" : "//localhost:8081/packs/",

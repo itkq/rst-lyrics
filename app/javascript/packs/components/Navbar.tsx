@@ -3,6 +3,7 @@ import * as React from 'react';
 
 interface Props {
     toggleFunc: () => void;
+    darkTheme: boolean;
 }
 
 interface State {
@@ -15,7 +16,7 @@ class App extends React.Component<Props, State> {
     private constructor(props: any) {
         super(props);
         this.state = {
-            darkTheme: false,
+            darkTheme: this.props.darkTheme,
         };
 
         this.handleClick = this.handleClick.bind(this);

@@ -1,12 +1,10 @@
-import { Card, Classes, Elevation, Overlay } from '@blueprintjs/core';
+import { Card } from '@blueprintjs/core';
 import * as React from 'react';
 
+import { HitData } from './Form';
+
 interface Props {
-    title: string;
-    artist: string;
-    composer: string;
-    lyricist: string;
-    lyric: string;
+    hitData: HitData;
 }
 
 interface State {
@@ -20,57 +18,46 @@ export default class Lyric extends React.Component<Props, State> {
         this.state = {
             isOpen: false,
         };
-
-        this.toggleOverlay = this.toggleOverlay.bind(this);
     }
 
     public render() {
-        return (
-            <Card interactive={true} elevation={Elevation.TWO} onClick={this.toggleOverlay}>
-                <h3>{this.props.title} / {this.props.artist}</h3>
-                <p>作曲: {this.props.composer} 作詞: {this.props.lyricist}</p>
-                <p>{this.shortLyric()}</p>
-                {this.renderOverlay()}
-            </Card>
-        );
-    }
+        // TODO: Interactive card
 
-    private renderOverlay() {
         return (
-            <Overlay
-                className={Classes.OVERLAY_SCROLL_CONTAINER}
-                isOpen={this.state.isOpen}
-                onClose={this.toggleOverlay}
-                hasBackdrop={true}
-                enforceFocus={true}
-                canEscapeKeyClose={true}
-                usePortal={true}
-            >
-                <Card interactive={false} elevation={Elevation.FOUR}>
-                    <h2>{this.props.title} / {this.props.artist}</h2>
-                    <p>作曲: {this.props.composer} 作詞: {this.props.lyricist}</p>
-                    {this.fullLyric()}
+            <div>
+                <Card interactive={false}>
+                    <h3>{this.renderTitle()} / {this.renderArtist()}</h3>
+                    <p>作曲: {this.renderComposer()} 作詞: {this.renderLyricist()}</p>
+                    <p className="bp3-running-text">{this.renderLyric()}</p>
                 </Card>
-            </Overlay>
+            </div>
         );
     }
 
-    private fullLyric() {
-        const lines = this.props.lyric.split('\n').map((line: string, index: number) => {
-            return <span key={index}>{line}<br /></span>;
-        });
-        return (
-            <p className={Classes.RUNNING_TEXT}>{lines}</p>
-        );
+    private renderTitle() {
+        return this.escapeEm(this.props.hitData._highlightResult.title.value);
     }
 
-    private shortLyric(): string {
-        return this.props.lyric.slice(0, 100) + "...";
+    private renderArtist() {
+        return this.escapeEm(this.props.hitData._highlightResult.artist.value);
     }
 
-    private toggleOverlay() {
-        this.setState((prevState: State) => {
-            return { isOpen: !prevState.isOpen };
-        });
+    private renderComposer() {
+        return this.escapeEm(this.props.hitData._highlightResult.composer.value);
+    }
+
+    private renderLyricist() {
+        return this.escapeEm(this.props.hitData._highlightResult.lyricist.value);
+    }
+
+    private renderLyric() {
+        return this.escapeEm(this.props.hitData._highlightResult.lyric.value);
+    }
+
+    private escapeEm(text: string) {
+        // FIXME: Should stop inline style
+        const style = "color: #070101; background-color: #f8ee7a; font-weight: bold;";
+        const replacedText = text.replace(/<em>/g, `<em style="${style}">`);
+        return <span dangerouslySetInnerHTML={{__html: replacedText}} />;
     }
 }
