@@ -43,11 +43,6 @@ export default class Lyric extends React.Component<Props, State> {
           <p>作曲: {this.renderComposer()} 作詞: {this.renderLyricist()}</p>
           <Divider />
           <p className="bp3-running-text">{this.renderLyric()}</p>
-          <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button onClick={this.handleClick}>Close</Button>
-            </div>
-          </div>
         </Card>
       </Dialog>
     );
