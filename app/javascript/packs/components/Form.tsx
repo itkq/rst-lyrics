@@ -1,13 +1,16 @@
 import { Button, Callout, Card, FormGroup, InputGroup, Intent, Spinner, Tag } from '@blueprintjs/core';
 import * as React from 'react';
+import BottomScrollListener from 'react-bottom-scroll-listener';
 
 import Lyric from './Lyric';
 
 interface State {
   query: string;
-  searchData?: SearchData;
   loading: boolean;
+  loadingMore: boolean;
   errorMessage: string;
+  searchData?: SearchData;
+  hits: HitData[];
 }
 
 const ENTER_KEY = 13;
@@ -46,14 +49,17 @@ export default class Form extends React.Component<{}, State> {
 
     this.state = {
       query: '',
-      searchData: undefined,
       loading: false,
+      loadingMore: false,
       errorMessage: '',
+      searchData: undefined,
+      hits: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleOnDocumentBottom = this.handleOnDocumentBottom.bind(this);
   }
 
   public render() {
@@ -69,21 +75,22 @@ export default class Form extends React.Component<{}, State> {
         </Card>
         <div id="lyric-portal" />
         {this.renderLyrics()}
+        {this.renderMoreSpinner()}
+        <BottomScrollListener offset={300} debounce={100} onBottom={this.handleOnDocumentBottom} />
       </div>
     );
   }
 
   public componentDidMount() {
-    this.load();
+    this.loadInit();
   }
 
-  // TODO: implement paging
   private renderLyrics() {
     if (!this.isSearchResultAvailable()) {
       return null;
     }
 
-    return this.state.searchData!.hits.map((hitData: HitData, index: number) => {
+    return this.state.hits.map((hitData: HitData, index: number) => {
       return (
         <Lyric key={index} hitData={hitData} />
       );
@@ -91,13 +98,9 @@ export default class Form extends React.Component<{}, State> {
   }
 
   private renderErrorMessage() {
-    const style = {
-      marginTop: '15px',
-    };
-
     if (this.state.errorMessage !== '') {
       return (
-        <Callout intent={Intent.DANGER} style={style}>
+        <Callout intent={Intent.DANGER} style={{ marginTop: '15px' }}>
           {this.state.errorMessage}
         </Callout>
       );
@@ -106,14 +109,20 @@ export default class Form extends React.Component<{}, State> {
     }
   }
 
-  private renderSpinner() {
-    if (this.state.loading) {
+  private renderSpinner(loading = this.state.loading) {
+    if (loading) {
       return (
-        <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_SMALL} />
+        <div style={{ marginTop: '15px' }}>
+          <Spinner intent={Intent.PRIMARY} size={35} />
+        </div>
       );
     } else {
       return null;
     }
+  }
+
+  private renderMoreSpinner() {
+    return this.renderSpinner(this.state.loadingMore);
   }
 
   private renderResultsTag() {
@@ -126,19 +135,33 @@ export default class Form extends React.Component<{}, State> {
     );
   }
 
-  private async load() {
-    try {
-      this.setState({ loading: true, errorMessage: '' });
-      const searchData = await this.search(this.state.query);
-      this.setState({ searchData });
-    } catch (e) {
-      this.setState({ errorMessage: e.toString() });
-    } finally {
-      this.setState({ loading: false });
+  private async loadInit() {
+    this.setState({ loading: true, errorMessage: '' });
+    this.load(this.state.query, 0);
+  }
+
+  private async loadMore() {
+    if (this.hasMorePage() && !this.state.loadingMore) {
+      this.setState({ loadingMore: true, errorMessage: '' });
+      this.load(this.state.query, this.state.searchData!.page + 1);
     }
   }
 
-  private async search(query: string, page = 0): Promise<SearchData> {
+  private async load(query: string, page: number) {
+    try {
+      const searchData = await this.search(query, page);
+      this.setState((prevState: State) => {
+        const hits = page === 0 ? searchData.hits : prevState.hits.concat(searchData.hits);
+        return { searchData, hits };
+      });
+    } catch (e) {
+      this.setState({ errorMessage: e.toString() });
+    } finally {
+      this.setState({ loading: false, loadingMore: false });
+    }
+  }
+
+  private async search(query: string, page: number): Promise<SearchData> {
     const q = `?query=${encodeURIComponent(query)}&page=${page}`;
     const resp = await fetch(`/jsapi/search${q}`).catch((e) => {
       throw new Error(`Networking error (status: ${e})`);
@@ -155,17 +178,30 @@ export default class Form extends React.Component<{}, State> {
     return typeof this.state.searchData !== 'undefined';
   }
 
+  private hasMorePage(): boolean {
+    if (!this.isSearchResultAvailable()) {
+      return false;
+    }
+
+    const searchData = this.state.searchData!;
+    return searchData.page < searchData.nbPages - 1;
+  }
+
   private handleChange(evt: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ query: evt.target.value });
   }
 
   private handleKeyDown(evt: React.KeyboardEvent<HTMLInputElement>) {
     if (evt.keyCode === ENTER_KEY) {
-      this.load();
+      this.loadInit();
     }
   }
 
   private handleClick() {
-    this.load();
+    this.loadInit();
+  }
+
+  private handleOnDocumentBottom() {
+    this.loadMore();
   }
 }
