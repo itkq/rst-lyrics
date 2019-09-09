@@ -4,6 +4,7 @@
   "dependencies": {
     "@blueprintjs/core": "^3.18.0",
     "@rails/ujs": "^6.0.0-alpha",
+    "rails-ujs": "^5.2.3",
     "react": "^16.9.0",
     "react-bottom-scroll-listener": "^3.0.0",
     "react-dom": "^16.9.0"

@@ -2,7 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import "./application.css";
 
-import Rails from '@rails/ujs';
+// @ts-ignore
+import * as Rails from 'rails-ujs';
 Rails.start();
 
 import App from "./App";

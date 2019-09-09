@@ -1,4 +1,6 @@
 import { Button, Callout, Card, FormGroup, InputGroup, Intent, Spinner, Tag } from '@blueprintjs/core';
+// @ts-ignore
+import * as Rails from 'rails-ujs';
 import * as React from 'react';
 import BottomScrollListener from 'react-bottom-scroll-listener';
 
@@ -162,8 +164,12 @@ export default class Form extends React.Component<{}, State> {
   }
 
   private async search(query: string, page: number): Promise<SearchData> {
-    const q = `?query=${encodeURIComponent(query)}&page=${page}`;
-    const resp = await fetch(`/jsapi/search${q}`).catch((e) => {
+    const body = new FormData();
+    body.append(Rails.csrfParam()!, Rails.csrfToken()!);
+    body.append('query', query);
+    body.append('page', page.toString());
+
+    const resp = await fetch(`/jsapi/search`, { method: 'POST', body }).catch((e) => {
       throw new Error(`Networking error (status: ${e})`);
     });
 
