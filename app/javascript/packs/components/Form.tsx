@@ -67,6 +67,7 @@ export default class Form extends React.Component<{}, State> {
           {this.renderSpinner()}
           {this.renderErrorMessage()}
         </Card>
+        <div id="lyric-portal" />
         {this.renderLyrics()}
       </div>
     );
