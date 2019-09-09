@@ -13,8 +13,11 @@ class Jsapi::SearchController < ApplicationController
   def search_with_cache(query, page)
     search_params = {
       page: page,
-      attributesToSnippet: "*:20",
+      attributesToSnippet: "lyric:40",
+      minWordSizefor1Typo: 1,
+      minWordSizefor2Typos: 1,
     }
+
     Rails.cache.fetch("/search/#{CGI.escape(query)}/#{page}") do
       AlgoliaService.search(query, search_params)
     end
