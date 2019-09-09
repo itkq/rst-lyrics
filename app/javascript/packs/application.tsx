@@ -9,5 +9,5 @@ import App from "./App";
 
 document.addEventListener("DOMContentLoaded", () => {
   const app = document.getElementById('app')!;
-  ReactDOM.render(<App/>, app);
+  ReactDOM.render(<App />, app);
 });

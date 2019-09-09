@@ -2,23 +2,23 @@
 @import "~@blueprintjs/core/lib/css/blueprint.css";
 
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #app {
-    display: flex;
-    width: 600px;
+  display: flex;
+  width: 600px;
 }
 
 
 @media screen and (max-width: 600px) {
-    #app {
-        width: 100%;
-    }
+#app {
+    width: 100%;
+  }
 }
 
 .bp3-dark {
-    background-color: #293742;
+  background-color: #293742;
 };
