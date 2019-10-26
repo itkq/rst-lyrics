@@ -6,6 +6,10 @@ import BottomScrollListener from 'react-bottom-scroll-listener';
 
 import Lyric from './Lyric';
 
+interface Props {
+  query: string;
+}
+
 interface State {
   query: string;
   loading: boolean;
@@ -45,12 +49,12 @@ interface Result {
   matchedWords: string;
 }
 
-export default class Form extends React.Component<{}, State> {
-  private constructor(props: {}) {
+export default class Form extends React.Component<Props, State> {
+  private constructor(props: Props) {
     super(props);
 
     this.state = {
-      query: '',
+      query: this.props.query,
       loading: false,
       loadingMore: false,
       errorMessage: '',
@@ -69,7 +73,7 @@ export default class Form extends React.Component<{}, State> {
       <div>
         <Card interactive={false}>
           <FormGroup label="Query" helperText="Hit enter key to search">
-            <InputGroup id="query" placeholder="Type anything" onChange={this.handleChange} onKeyDown={this.handleKeyDown} rightElement={this.renderResultsTag()} />
+            <InputGroup id="query" placeholder="Type anything" value={this.state.query} onChange={this.handleChange} onKeyDown={this.handleKeyDown} rightElement={this.renderResultsTag()} />
           </FormGroup>
           <Button intent={Intent.PRIMARY} icon="search" text="Search" onClick={this.handleClick} />
           {this.renderSpinner()}

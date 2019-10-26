@@ -3,20 +3,21 @@ import * as React from 'react';
 import Form from './components/Form';
 import Navbar from './components/Navbar';
 
+interface Props {
+  query: string;
+}
+
 interface State {
   darkTheme: boolean;
 }
 
-class App extends React.Component<{}, State> {
-  private constructor(props: any) {
+class App extends React.Component<Props, State> {
+  private constructor(props: Props) {
     super(props);
 
-    const darkTheme = localStorage.getItem("darkTheme");
-    if (darkTheme !== null && darkTheme === "true") {
-      this.state = { darkTheme: true };
-    } else {
-      this.state = { darkTheme: false };
-    }
+    const darkThemeValue = localStorage.getItem("darkTheme");
+    const darkTheme = darkThemeValue !== null && darkThemeValue === "true";
+    this.state = { darkTheme };
   }
 
   public render() {
@@ -24,7 +25,7 @@ class App extends React.Component<{}, State> {
     return (
       <div className={this.themeClass()}>
         <Navbar darkTheme={this.state.darkTheme} toggleFunc={() => { this.toggleTheme(); }} />
-        <Form />
+        <Form query={this.props.query}/>
       </div>
     );
   }

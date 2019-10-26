@@ -10,5 +10,8 @@ import App from "./App";
 
 document.addEventListener("DOMContentLoaded", () => {
   const app = document.getElementById('app')!;
-  ReactDOM.render(<App />, app);
+  if (app) {
+    const elem = <App query={app.dataset.query!} />;
+    ReactDOM.render(elem, app);
+  }
 });
