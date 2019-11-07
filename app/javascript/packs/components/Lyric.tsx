@@ -38,11 +38,16 @@ export default class Lyric extends React.Component<Props, State> {
   private renderOverlay() {
     return (
       <Dialog className={Classes.OVERLAY_SCROLL_CONTAINER} isOpen={this.state.isOpen} onClose={this.handleClick} portalContainer={document.getElementById('lyric-portal')!}>
-        <Card onClick={this.handleClick}>
+        <Card>
           <h3>{this.renderTitle()} / {this.renderArtist()}</h3>
           <p>作曲: {this.renderComposer()} 作詞: {this.renderLyricist()}</p>
           <Divider />
           <p className="bp3-running-text">{this.renderLyric()}</p>
+          <div className={Classes.DIALOG_FOOTER}>
+            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+              <Button onClick={this.handleClick}>Close</Button>
+            </div>
+          </div>
         </Card>
       </Dialog>
     );
