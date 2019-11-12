@@ -1,6 +1,8 @@
+#!/usr/bin/env ruby
+
+require 'algoliasearch'
 require 'open-uri'
 require 'nokogiri'
-require 'json'
 
 url = ARGV[0]
 unless url
@@ -42,4 +44,9 @@ html.css('p.sml').each do |p|
   end
 end
 
-puts JSON.pretty_generate(song.as_json)
+Algolia.init(
+  application_id: ENV.fetch('ALGOLIA_APPLICATION_ID'),
+  api_key: ENV.fetch('ALGOLIA_API_KEY'),
+)
+index = Algolia::Index.new(ENV.fetch('ALGOLIA_INDEX_NAME', 'rst-lyrics'))
+index.add_objects([song.as_json])
