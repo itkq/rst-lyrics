@@ -6,7 +6,7 @@
     %title rst-lyrics
     = csrf_meta_tags
     = csp_meta_tag
-    = javascript_pack_tag 'application'
+    = javascript_pack_tag 'application', defer: true
     = stylesheet_pack_tag 'application', media: 'all'
   %body
     = yield
