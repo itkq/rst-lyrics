@@ -72,7 +72,7 @@ export default class Form extends React.Component<Props, State> {
     return (
       <div>
         <Card interactive={false}>
-          <FormGroup label="Query" helperText="Hit enter key to search">
+          <FormGroup label="Query" labelFor="query" helperText="Hit enter key to search">
             <InputGroup id="query" placeholder="Type anything" value={this.state.query} onChange={this.handleChange} onKeyDown={this.handleKeyDown} rightElement={this.renderResultsTag()} />
           </FormGroup>
           <Button intent={Intent.PRIMARY} icon="search" text="Search" onClick={this.handleClick} />
