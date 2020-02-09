@@ -28,4 +28,5 @@ COPY . /app
 
 COPY --from=assets-builder /app/public/packs ./public/packs
 
+ENV RUBYOPT -W:no-deprecated
 CMD ["bin/rails", "c"]
